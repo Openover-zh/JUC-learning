@@ -19,23 +19,48 @@ public class LockSupportDemo
 
     public static void main(String[] args)
     {
-//        Thread t1 = new Thread(() -> {
-//            System.out.println(Thread.currentThread().getName() + "\t" + "---come in");
-//            LockSupport.park();
-//            LockSupport.park();
-//            System.out.println(Thread.currentThread().getName() + "\t" + "---被唤醒");
-//        }, "t1");
-//        t1.start();
-//
-//        new Thread(() -> {
-//            LockSupport.unpark(t1);
-//            try { TimeUnit.SECONDS.sleep(3); } catch (InterruptedException e) { e.printStackTrace(); }
-//            LockSupport.unpark(t1);
-//            System.out.println(Thread.currentThread().getName()+"\t"+"---发出通知");
-//        },"t2").start();
 
+        lockSupport();
 //        syncWaitNotify();
-        lockAwaitSignal();
+//        lockAwaitSignal();
+    }
+
+
+    /**
+     * 1. 正常使用 无锁块限制
+     * 2. 可以先调用unpark()方法 再调用park()方法
+     * * * 先调用unpark()会将Permit许可设置为1 当调用park时会判断当前Permit是否为1 如果为1 则将Permit设置为0 程序会继续向下执行
+     * 3. 总结
+     * * * lockSupport的park和unpark必须是成双成对的
+     */
+    public static void lockSupport(){
+        Thread t1 = new Thread(() -> {
+            try {
+                /*
+                 - 这里设置先试用unpark唤醒 再使用park阻塞 测试是否可以正常唤醒
+                 - 如果这里设置的睡眠时间比t2线程的睡眠时间长 将导致程序不会停止 因为LockSupport最大值为1 不会叠加 也就是说当执行两遍
+                 unpark()后再执行两遍park()时 第二个park()将阻塞当前线程
+                 */
+                 TimeUnit.SECONDS.sleep(2);
+             } catch (InterruptedException e) {
+                 e.printStackTrace();
+             }
+            System.out.println(Thread.currentThread().getName() + "\t" + "---come in");
+            LockSupport.park();
+            System.out.println(Thread.currentThread().getName()+ "\t"+"---第一次被唤醒");
+            LockSupport.park();
+            System.out.println(Thread.currentThread().getName() + "\t" + "---被唤醒");
+        }, "t1");
+        t1.start();
+
+        new Thread(() -> {
+            //唤醒第一个park
+            LockSupport.unpark(t1);
+            try { TimeUnit.SECONDS.sleep(3); } catch (InterruptedException e) { e.printStackTrace(); }
+            //唤醒第二个park
+            LockSupport.unpark(t1);
+            System.out.println(Thread.currentThread().getName()+"\t"+"---发出通知");
+        },"t2").start();
     }
 
 
@@ -43,7 +68,18 @@ public class LockSupportDemo
 
 
     /**
-     *
+     * 1. 正常使用  Condition condition = lock.newCondition();
+     * * * condition.await();   condition.signal();
+     * 2. 异常情况
+     * * * 不实用lock锁包裹: 去掉lock() unlock() 发现会抛出异常
+     * * * * Exception in thread "t2" java.lang.IllegalMonitorStateException
+     * * * * Exception in thread "t1" java.lang.IllegalMonitorStateException
+     * 3. 测试signal()方法在await()之前执行
+     * * * 发现程序不会终止
+     * 4. 结论
+     * * * lock、unlock对里面才能正确调用调用condition中线程等待和唤醒的方法
+     * * * 先 await() 后 signal 才 OK ，否则线程无法被唤醒
+     * * * 所以综上 await()/signal()方法 和 wait()/notify()方法一样 不能颠倒顺序执行
      */
     public static void lockAwaitSignal()
     {
@@ -54,6 +90,7 @@ public class LockSupportDemo
             try
             {
                 System.out.println(Thread.currentThread().getName()+"\t"+"---come in");
+                //等待线程
                 condition.await();
                 System.out.println(Thread.currentThread().getName()+"\t"+"---被唤醒");
             } catch (InterruptedException e) {

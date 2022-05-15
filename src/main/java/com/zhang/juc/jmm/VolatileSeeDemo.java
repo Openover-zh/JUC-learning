@@ -1,15 +1,17 @@
 package com.zhang.juc.jmm;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * @auther zzyy
  * @create 2021-03-15 19:13
  */
 public class VolatileSeeDemo
 {
-    //static          boolean flag = true;       //不加volatile，没有可见性
-    volatile boolean flag = true;       //加了volatile，保证可见性
+    static  boolean flag = true;       //不加volatile，没有可见性
+//    static volatile boolean flag = true;       //加了volatile，保证可见性
 
-    /*public static void main(String[] args)
+    public static void main(String[] args)
     {
         new Thread(() -> {
             System.out.println(Thread.currentThread().getName()+"\t"+"---come in");
@@ -25,5 +27,5 @@ public class VolatileSeeDemo
         new Thread(() -> {
             flag = false;
         },"t2").start();
-    }*/
+    }
 }

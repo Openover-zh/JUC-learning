@@ -4,8 +4,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * @auther zzyy
- * @create 2021-03-17 15:21
  * 题目：实现一个自旋锁
  * 自旋锁好处：循环比较获取没有类似wait的阻塞。
  *

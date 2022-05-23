@@ -29,9 +29,10 @@ public class LongAdderAPIDemo
             }
         }, 100);
 
-        longAccumulator.accumulate(1);//1
-        longAccumulator.accumulate(2);//3
-        longAccumulator.accumulate(3);//6
+        // 第一次identity-1 等于99
+        longAccumulator.accumulate(1);//99
+        longAccumulator.accumulate(2);//97
+        longAccumulator.accumulate(3);//94
 
         System.out.println(longAccumulator.longValue());
 

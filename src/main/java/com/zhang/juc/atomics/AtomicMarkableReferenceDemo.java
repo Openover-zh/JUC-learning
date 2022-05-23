@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicMarkableReference;
  */
 public class AtomicMarkableReferenceDemo
 {
-    static AtomicMarkableReference atomicMarkableReference = new AtomicMarkableReference(100,false);
+    static AtomicMarkableReference<Integer> atomicMarkableReference = new AtomicMarkableReference<>(100,false);
 
     public static void main(String[] args)
     {
@@ -17,6 +17,7 @@ public class AtomicMarkableReferenceDemo
             boolean marked = atomicMarkableReference.isMarked();
             System.out.println(Thread.currentThread().getName()+"\t"+"---默认修改标识："+marked);
             try { TimeUnit.SECONDS.sleep(1); } catch (InterruptedException e) { e.printStackTrace(); }
+            // 将100替换为101 并将marked改为!mark
             atomicMarkableReference.compareAndSet(100,101,marked,!marked);
         },"t1").start();
 

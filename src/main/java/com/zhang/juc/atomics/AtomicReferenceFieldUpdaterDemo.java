@@ -6,10 +6,11 @@ import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 class MyVar
 {
     public volatile Boolean isInit = Boolean.FALSE;
-    AtomicReferenceFieldUpdater<MyVar,Boolean> FieldUpdater = AtomicReferenceFieldUpdater.newUpdater(MyVar.class,Boolean.class,"isInit");
+    static final AtomicReferenceFieldUpdater<MyVar,Boolean> FieldUpdater = AtomicReferenceFieldUpdater.newUpdater(MyVar.class,Boolean.class,"isInit");
 
     public void init(MyVar myVar)
     {
+        //判断
         if(FieldUpdater.compareAndSet(myVar,Boolean.FALSE,Boolean.TRUE))
         {
             System.out.println(Thread.currentThread().getName()+"\t"+"---start init");

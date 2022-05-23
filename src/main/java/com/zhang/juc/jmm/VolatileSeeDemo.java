@@ -8,8 +8,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class VolatileSeeDemo
 {
-    static  boolean flag = true;       //不加volatile，没有可见性
-//    static volatile boolean flag = true;       //加了volatile，保证可见性
+//    static  boolean flag = true;       //不加volatile，没有可见性
+    static volatile boolean flag = true;       //加了volatile，保证可见性
 
     public static void main(String[] args)
     {

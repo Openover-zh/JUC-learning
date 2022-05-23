@@ -11,6 +11,7 @@ import java.util.concurrent.atomic.AtomicStampedReference;
 public class ABADemo
 {
     static AtomicInteger atomicInteger = new AtomicInteger(100);
+    //设置初始版本号为1
     static AtomicStampedReference<Integer> atomicStampedReference = new AtomicStampedReference<>(100,1);
 
     public static void main(String[] args)

@@ -32,7 +32,8 @@ public class ReferenceDemo
         new Thread(() -> {
             while (true)
             {
-                list.add(new byte[1 * 1024 * 1024]);
+//                list.add(new byte[1024 * 1024]);
+                System.gc();
                 try { TimeUnit.MILLISECONDS.sleep(500); } catch (InterruptedException e) { e.printStackTrace(); }
                 System.out.println(phantomReference.get());
             }
@@ -50,12 +51,11 @@ public class ReferenceDemo
 
         //暂停几秒钟线程
         try { TimeUnit.SECONDS.sleep(5); } catch (InterruptedException e) { e.printStackTrace(); }
-
     }
 
     public static void weakReference()
     {
-        WeakReference<MyObject> weakReference = new WeakReference(new MyObject());
+        WeakReference<MyObject> weakReference = new WeakReference<>(new MyObject());
         System.out.println("gc before: "+weakReference.get());
 
         System.gc();//手动挡的方式开启Gc回收。
@@ -68,13 +68,13 @@ public class ReferenceDemo
     {
         SoftReference<MyObject> softReference = new SoftReference<>(new MyObject());//软引用
 
-        /*内存够用
-        System.out.println("gc before内存够用: "+softReference);
-
-        System.gc();//手动挡的方式开启Gc回收。
-        try { TimeUnit.SECONDS.sleep(1); } catch (InterruptedException e) { e.printStackTrace(); }
-
-        System.out.println("gc after内存够用: "+softReference);*/
+//        内存够用
+//        System.out.println("gc before内存够用: "+softReference);
+//
+//        System.gc();//手动挡的方式开启Gc回收。
+//        try { TimeUnit.SECONDS.sleep(1); } catch (InterruptedException e) { e.printStackTrace(); }
+//
+//        System.out.println("gc after内存够用: "+softReference);
 
         //设置参数-Xms10m -Xmx10m
         System.out.println("gc before: "+softReference);
@@ -82,6 +82,7 @@ public class ReferenceDemo
         try
         {
             byte[] bytes = new byte[9 * 1024 * 1024];
+            System.gc();
         }catch (Exception e){
             e.printStackTrace();
         }finally {
@@ -93,9 +94,9 @@ public class ReferenceDemo
     {
         MyObject myObject = new MyObject();//默认，强引用,死了都不放手
         System.out.println("gc before: "+myObject);
-
+        //设置为null 表示该对象可以被回收
         myObject = null;
-        System.gc();//手动挡的方式开启Gc回收。
+        System.gc();//手动的方式开启Gc回收。
         try { TimeUnit.SECONDS.sleep(1); } catch (InterruptedException e) { e.printStackTrace(); }
 
         System.out.println("gc after: "+myObject);

@@ -73,7 +73,7 @@ public class ThreadLocalDemo
             }catch (Exception e){
                 e.printStackTrace();
             }finally {
-                house.threadLocal.remove();
+                house.threadLocal.remove();   //清除自定义的ThreadLocal变量,防止内存泄露
                 house.threadLocal2.remove();
             }
         },"t1").start();
@@ -108,17 +108,6 @@ public class ThreadLocalDemo
 
 
         System.out.println(Thread.currentThread().getName()+"\t"+"---卖出： "+house.threadLocal.get());
-
-
-        House bighouse = new House();
-
-        new Thread(() -> {
-            bighouse.saleHouse();
-        },"t1").start();
-
-        new Thread(() -> {
-            bighouse.saleHouse();
-        },"t2").start();
 
     }
 }

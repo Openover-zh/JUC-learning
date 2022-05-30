@@ -2,7 +2,10 @@ package com.zhang.juc.tl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @auther zzyy
@@ -11,10 +14,10 @@ import java.util.Date;
 public class ThreadLocalDateUtils
 {
     public static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    public static Date parse(String stringDate) throws ParseException
-    {
-        return sdf.parse(stringDate);
-    }
+//    public static Date parse(String stringDate) throws ParseException
+//    {
+//        return sdf.parse(stringDate);
+//    }
 
 
     //2   ThreadLocal可以确保每个线程都可以得到各自单独的一个SimpleDateFormat的对象，那么自然也就不存在竞争问题了。
@@ -31,7 +34,7 @@ public class ThreadLocalDateUtils
     DateTimeFormatter 代替 SimpleDateFormat，官方给出的解释：simple beautiful strong immutable
     thread-safe。*/
 
-    /*public static final DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    public static final DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public static String format(LocalDateTime localDateTime)
     {
@@ -42,7 +45,7 @@ public class ThreadLocalDateUtils
     {
 
         return LocalDateTime.parse(dateString,DATE_TIME_FORMAT);
-    }*/
+    }
 
     public static void main(String[] args) throws ParseException
     {
@@ -50,13 +53,11 @@ public class ThreadLocalDateUtils
             new Thread(() -> {
                 try {
                     //System.out.println(ThreadLocalDateUtils.parse("2011-11-11 11:11:11"));
-
-                    /*SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    System.out.println(sdf.parse("2011-11-11 11:11:11"));
-                    sdf = null;*/
-
+                    //这里使用局部变量没有多线程安全问题
+//                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//                    System.out.println(sdf.parse("2011-11-11 11:11:11"));
+//                    sdf = null;
                     System.out.println(ThreadLocalDateUtils.parseByThreadLocal("2011-11-11 11:11:11"));
-
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }finally {

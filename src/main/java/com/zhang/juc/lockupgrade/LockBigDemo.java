@@ -17,6 +17,21 @@ public class LockBigDemo
 
     public static void main(String[] args)
     {
+        new Thread(()->{
+            synchronized (objectLock){
+                System.out.println("----------1");
+            }
+            synchronized (objectLock){
+                System.out.println("----------2");
+            }
+            synchronized (objectLock){
+                System.out.println("--------3");
+            }
+            synchronized (objectLock){
+                System.out.println("-----------4");
+            }
+        },"t1").start();
+        /* 优化后
         new Thread(() -> {
             synchronized (objectLock) {
                 System.out.println("-------1");
@@ -29,7 +44,7 @@ public class LockBigDemo
 
                 System.out.println("-------4");
             }
-        },"t1").start();
+        },"t1").start();*/
 
 
         Lock lock = new ReentrantLock();

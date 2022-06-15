@@ -1,6 +1,7 @@
 package com.zhang.juc.lockupgrade;
 
 import org.openjdk.jol.info.ClassLayout;
+import org.openjdk.jol.vm.VM;
 
 /**
  * @auther zzyy
@@ -12,14 +13,17 @@ public class MyObject
     {
         Object o = new Object();
 
-        new Thread(() ->
-        {
-            synchronized (o)
-            {
-                System.out.println( ClassLayout.parseInstance(o).toPrintable());
-            }
-
-        },"t1").start();
+//        new Thread(() ->
+//        {
+//            synchronized (o)
+//            {
+//                System.out.println( ClassLayout.parseInstance(o).toPrintable());
+//            }
+//
+//        },"t1").start();
+        System.out.println("hello world");
+        System.out.println(VM.current().details());
+        System.out.println(VM.current().objectAlignment());
     }
 
     public static void biasedLock()

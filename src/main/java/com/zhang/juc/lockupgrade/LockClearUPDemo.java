@@ -14,16 +14,23 @@ public class LockClearUPDemo
 
     public void m1()
     {
+        // 每次进来都会创建一个新的对象,造成锁消除, 每个锁加的都不是一个对象
         Object objectLock = new Object();//锁消除
 
         synchronized (objectLock)
         {
+            System.out.println(Thread.currentThread().getName()+"\t"+objectLock.hashCode());
             System.out.println("----hello lock");
         }
     }
 
     public static void main(String[] args)
     {
-
+        LockClearUPDemo lockClearUPDemo = new LockClearUPDemo();
+        for (int i = 0; i < 1000 ; i++) {
+            new Thread(()->{
+                lockClearUPDemo.m1();
+            },i+"").start();
+        }
     }
 }

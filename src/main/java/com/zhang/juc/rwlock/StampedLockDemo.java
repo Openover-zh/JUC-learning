@@ -15,14 +15,18 @@ public class StampedLockDemo
     public void write()
     {
         long stamp = stampedLock.writeLock();
+//        long l = 0;
         System.out.println(Thread.currentThread().getName()+"\t"+"=====写线程准备修改");
         try
         {
             number = number + 13;
+//            l = stampedLock.readLock(); // stampedLock是不可重入的 获取写锁后不能降级获取读锁 与ReentrantReadWriterLock不同
+//            System.out.println("----写里面读-");
         }catch (Exception e){
             e.printStackTrace();
         }finally {
             stampedLock.unlockWrite(stamp);
+//            stampedLock.unlockRead(l);
         }
         System.out.println(Thread.currentThread().getName()+"\t"+"=====写线程结束修改");
     }
@@ -86,19 +90,22 @@ public class StampedLockDemo
         StampedLockDemo resource = new StampedLockDemo();
 
         //1 悲观读,和ReentrantReadWriteLock一样
-        /*new Thread(() -> {
-            //悲观读
-            resource.read();
-        },"readThread").start();*/
+//        new Thread(()->{
+//            resource.write();
+//        }).start();
+//        new Thread(() -> {
+//            //悲观读
+//            resource.read();
+//        },"readThread").start();
 
         //2 乐观读，成功
-        /*new Thread(() -> {
-            //乐观读
-            resource.tryOptimisticRead();
-        },"readThread").start();
+//        new Thread(() -> {
+//            //乐观读
+//            resource.tryOptimisticRead();
+//        },"readThread").start();
 
         //6秒钟乐观读取resource.tryOptimisticRead()成功
-        try { TimeUnit.SECONDS.sleep(6); } catch (InterruptedException e) { e.printStackTrace(); }*/
+//        try { TimeUnit.SECONDS.sleep(6); } catch (InterruptedException e) { e.printStackTrace(); }
 
         //3 乐观读，失败，重新转为悲观读，重读数据一次
         new Thread(() -> {

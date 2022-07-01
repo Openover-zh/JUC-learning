@@ -78,7 +78,7 @@ public class ReentrantReadWriteLockDemo
             int finalI = i;
             new Thread(() -> {
                 myResource.write(finalI +"", finalI +"");
-            },"马羽成"+String.valueOf(i)).start();
+            },"zhang"+String.valueOf(i)).start();
         }
 
     }
